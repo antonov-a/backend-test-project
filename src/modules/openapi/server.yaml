@@ -1,0 +1,140 @@
+openapi: "3.0.0"
+
+info:
+  title: Products DB API
+  version: "1.0"
+servers:
+  - url: http://localhost:5000/v1
+
+paths:
+  /products:
+    get:
+      tags:
+        - products
+      summary: A list of products, names, and prices
+      operationId: modules.endpoints.get_products
+      responses:
+        200:
+          description: list of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /product:
+    post:
+      tags:
+        - product
+      summary: Add a new product to the system
+      operationId: modules.endpoints.post_product
+      requestBody:
+        required: true
+        description: New product data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        200:
+          description: Confirmation that operation succeded
+        400:
+          description: Invalid parameter
+  '/product/{id}':
+    get:
+      tags:
+        - products
+      summary: Product's name, id and price
+      operationId: modules.endpoints.get_product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          example: "12"
+          schema:
+            type: integer
+      responses:
+        200:
+          description: product data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+    put:
+      tags:
+        - products
+      summary: update product's name and price
+      operationId: modules.endpoints.put_product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          example: "12"
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        description: New product data
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        200:
+          description: product data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        404:
+          description: product is missing in database
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Not Found"
+    delete:
+      tags:
+        - products
+      summary: Product's name, id and price
+      operationId: modules.endpoints.delete_product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          example: "12"
+          schema:
+            type: integer
+      responses:
+        200:
+          description: product data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        404:
+          description: product is missing in database
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Not Found"       
+components:
+  schemas:
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 12
+          description: id of the product
+        name:
+          type: string
+          example: Turkey steak
+          description: Name of the product
+        price:
+          oneOf:
+            - type: string
+            - type: number
+          example: 192.12
+          description: price of the product in GBP
